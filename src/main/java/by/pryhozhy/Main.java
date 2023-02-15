@@ -192,17 +192,6 @@ public class Main {
                 .sorted(Map.Entry.comparingByKey(Comparator.reverseOrder())) //it must be true - first
                 .forEach(e -> people.addAll(e.getValue()));
         people.stream().limit(500).forEach(System.out::println);
-
-
-//
-//                .stream()
-//                .map(e -> e.getKey() ? Map.entry(1, e.getValue().stream()
-//                        .map(House::getPersonList)
-//                        .flatMap(List::stream)
-//                        .collect(Collectors.toList())) //turn list of lists into list
-//                        : e.getValue().stream().map(House::getPersonList).map())
-//                .forEach(System.out::println);
-
     }
 
     private static void task14() throws IOException {
