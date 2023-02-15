@@ -170,23 +170,38 @@ public class Main {
     private static void task13() throws IOException {
         //TODO: complete method
         List<House> houses = Util.getHouses();
-        Predicate<House> inHospital = h -> "Hospital".equals(h.getBuildingType());
-        Predicate<Person> second = p -> {
+        Predicate<Person> isChildOrRetiree = p -> {
             int age = Period.between(LocalDate.now(), p.getDateOfBirth()).getYears();
             return age < 18
                     || ("Female".equals(p.getGender()) && age >= 58)
                     || ("Male".equals(p.getGender()) && age >= 63);
         };
-        houses.stream()
-                .collect(Collectors.partitioningBy(inHospital))
+        Map<Boolean, List<House>> hospitalsAndOthers = houses.stream()
+                .collect(Collectors.partitioningBy(h -> "Hospital".equals(h.getBuildingType())));
+        List<Person> people = new ArrayList<>();
+        hospitalsAndOthers.get(true)   //from hospital
+                .stream()
+                .flatMap(h -> h.getPersonList().stream())
+                .forEach(people::add);
+        hospitalsAndOthers.get(false)
+                .stream()
+                .flatMap(h -> h.getPersonList().stream())
+                .collect(Collectors.partitioningBy(isChildOrRetiree))
                 .entrySet()
                 .stream()
-                .map(e -> e.getKey() ? Map.entry(1, e.getValue().stream()
-                        .map(House::getPersonList)
-                        .flatMap(List::stream)
-                        .collect(Collectors.toList())) //turn list of lists into list
-                        : e.getValue().stream().map(House::getPersonList).map())
-                .forEach(System.out::println);
+                .sorted(Map.Entry.comparingByKey(Comparator.reverseOrder())) //it must be true - first
+                .forEach(e -> people.addAll(e.getValue()));
+        people.stream().limit(500).forEach(System.out::println);
+
+
+//
+//                .stream()
+//                .map(e -> e.getKey() ? Map.entry(1, e.getValue().stream()
+//                        .map(House::getPersonList)
+//                        .flatMap(List::stream)
+//                        .collect(Collectors.toList())) //turn list of lists into list
+//                        : e.getValue().stream().map(House::getPersonList).map())
+//                .forEach(System.out::println);
 
     }
 
