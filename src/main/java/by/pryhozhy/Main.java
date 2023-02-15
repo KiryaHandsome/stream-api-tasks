@@ -171,7 +171,7 @@ public class Main {
         //TODO: complete method
         List<House> houses = Util.getHouses();
         Predicate<Person> isChildOrRetiree = p -> {
-            int age = Period.between(LocalDate.now(), p.getDateOfBirth()).getYears();
+            int age = Period.between(p.getDateOfBirth(), LocalDate.now()).getYears();
             return age < 18
                     || ("Female".equals(p.getGender()) && age >= 58)
                     || ("Male".equals(p.getGender()) && age >= 63);
@@ -183,6 +183,7 @@ public class Main {
                 .stream()
                 .flatMap(h -> h.getPersonList().stream())
                 .forEach(people::add);
+        System.out.println("From hospital" + people);
         hospitalsAndOthers.get(false)
                 .stream()
                 .flatMap(h -> h.getPersonList().stream())
