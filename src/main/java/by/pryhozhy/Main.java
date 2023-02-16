@@ -198,19 +198,60 @@ public class Main {
     private static void task14() throws IOException {
         //TODO: complete method
         List<Car> cars = Util.getCars();
-//        List<Car> remainingCars = Util.getCars();
-//        Stream<Car> turkmenistan = cars.stream()
-//                .filter(c -> "Jaguar".equals(c.getCarModel()) || "White".equals(c.getColor()));
-//        Stream<Car> uzbekistan = cars.stream()
-//                .filter(c -> c.getMass() < 1500)
-//                .filter(c -> "BMW".equals(c.getCarModel())
-//                        || "Lexus".equals(c.getCarModel())
-//                        || "Chrysler".equals(c.getCarModel())
-//                        || "Toyota".equals(c.getCarModel()));
-//        Stream<Car> kazahstan = carsStream.filter();
-//        Stream<Car> kirgizstan = carsStream.filter();
-//        Stream<Car> russia = carsStream.filter();
-//        Stream<Car> mongolia = carsStream.filter();
+        Map<String, List<Car>> countriesCars = new HashMap<>();
+        List<Car> turkmenistan = cars.stream()
+                .filter(c -> "Jaguar".equals(c.getCarModel()) || "White".equals(c.getColor()))
+                .toList();
+        cars.removeAll(turkmenistan);
+        countriesCars.put("turkmenistan", turkmenistan);
+        List<Car> uzbekistan = cars.stream()
+                .filter(c -> c.getMass() < 1500)
+                .filter(c -> "BMW".equals(c.getCarModel())
+                        || "Lexus".equals(c.getCarModel())
+                        || "Chrysler".equals(c.getCarModel())
+                        || "Toyota".equals(c.getCarModel()))
+                .toList();
+        cars.removeAll(uzbekistan);
+        countriesCars.put("uzbekistan", uzbekistan);
+        List<Car> kazahstan = cars.stream()
+                .filter(c -> "Black".equals(c.getColor()))
+                .filter(c -> c.getMass() > 4000)
+                .filter(c -> "GMC".equals(c.getCarModel())
+                        || "Dodge".equals(c.getCarModel()))
+                .toList();
+        cars.removeAll(kazahstan);
+        countriesCars.put("kazahstan", kazahstan);
+        List<Car> kirgizstan = cars.stream()
+                .filter(c -> c.getReleaseYear() < 1982
+                        || "Civic".equals(c.getCarModel())
+                        || "Cherokee".equals(c.getCarModel()))
+                .toList();
+        cars.removeAll(kirgizstan);
+        countriesCars.put("kirgizstan", kirgizstan);
+        List<Car> russia = cars.stream()
+                .filter(c -> (!"Yellow".equals(c.getColor())
+                        && !"Red".equals(c.getColor())
+                        && !"Green".equals(c.getColor())
+                        && !"Blue".equals(c.getColor()))
+                        || c.getPrice() > 40000)
+                .toList();
+        cars.removeAll(russia);
+        countriesCars.put("russia", russia);
+        List<Car> mongolia = cars.stream()
+                .filter(c -> c.getVin().contains("59"))
+                .toList();
+        countriesCars.put("russia", russia);
+
+        countriesCars.forEach((s, c) -> {
+            int totalMass = c.stream().mapToInt(Car::getMass).sum();
+            System.out.println("Total mass for " + s + " = " + totalMass);
+            System.out.println("Total transfer overheads for " + s + " = " + (double)totalMass / 1000 * 7.14);
+        });
+        System.out.println("Total revenue: " + countriesCars.values()
+                .stream().mapToInt(carList -> carList.stream()
+                        .mapToInt(Car::getMass)
+                        .sum())
+                .sum());
     }
 
     private static void task15() throws IOException {
